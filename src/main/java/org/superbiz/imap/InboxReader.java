@@ -23,6 +23,8 @@ import org.apache.tomee.chatterbox.imap.api.Subject;
 import org.apache.tomee.chatterbox.imap.api.SubjectParam;
 
 import javax.ejb.MessageDriven;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,10 +33,25 @@ public class InboxReader implements MailListener {
 
     private static final Logger LOGGER = Logger.getLogger(InboxReader.class.getName());
 
-    @Subject(".*test.*")
+    @Subject(".*\\[Salesforce Web to Lead Submission\\].*")
     public void logMessage(@FromParam final String from, @SubjectParam final String subject, @BodyParam final String message) {
-        LOGGER.log(Level.INFO, String.format("Message from: %s, subject: %s", from, subject));
-        LOGGER.log(Level.INFO, String.format("Message body: %s", message));
+        final String[] lines = message.split("\n");
+        final Map<String, String> data = new HashMap<>();
+
+        for (final String line : lines) {
+            if (! line.contains(":")) continue;
+
+            final int pos = line.indexOf(":");
+
+            final String key = line.substring(0, pos).trim();
+            final String value = line.substring(pos + 1).trim();
+
+            data.put(key, value);
+        }
+
+        data.forEach((k,v) -> {
+            System.out.println(String.format("%s: %s", k, v));
+        });
     }
 
 }

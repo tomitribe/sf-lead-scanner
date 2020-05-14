@@ -13,6 +13,7 @@ public class StorageService {
     @PersistenceContext(unitName = "lead-pu")
     private EntityManager em;
 
-
-
+    public void persistLead(final Lead lead) {
+        em.persist(lead);
+    }
 }

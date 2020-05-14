@@ -26,6 +26,9 @@ public class Lead {
     @Column
     private String email;
 
+    @Column
+    private String company;
+
     public Long getId() {
         return id;
     }
@@ -74,23 +77,11 @@ public class Lead {
         this.email = email;
     }
 
+    public String getCompany() {
+        return company;
+    }
 
-    /*
-        Lead Source: Lead form on Tomitribe.com contact page
-        Form ID: 5
-        Company: BTS
-        Email: tsexton@wrberkley.com
-        Message: What is the dollar amount charged per core for Tomcat Support?
-        From: Tomitribe <ops@tomitribe.com>
-        Last name: Sexton
-        Date: Mon, Apr 1, 2019 at 8:47 PM
-        Subject: [Salesforce Web to Lead Submission] Lead form on Tomitribe.com
-        How did you hear about Tomitribe?: Web
-        Phone: 515-564-2595
-        http: //www.tomitribe.com
-        First name: Terri
-        To: <ops@tomitribe.com>
-        Form Editor:
-        https: //tomitribe4.wpengine.com/wp-admin/options-general.php?page=salesforce-wordpress-to-lead&tab=form&id=5
-     */
+    public void setCompany(String company) {
+        this.company = company;
+    }
 }

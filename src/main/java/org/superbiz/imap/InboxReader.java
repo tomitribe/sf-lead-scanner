@@ -22,7 +22,11 @@ import org.apache.tomee.chatterbox.imap.api.MailListener;
 import org.apache.tomee.chatterbox.imap.api.Subject;
 import org.apache.tomee.chatterbox.imap.api.SubjectParam;
 
+import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -33,8 +37,11 @@ public class InboxReader implements MailListener {
 
     private static final Logger LOGGER = Logger.getLogger(InboxReader.class.getName());
 
-    @Subject(".*\\[Salesforce Web to Lead Submission\\].*")
-    public void logMessage(@FromParam final String from, @SubjectParam final String subject, @BodyParam final String message) {
+    @EJB
+    private StorageService storageService;
+
+    @Subject(".*\\[Salesforce Web .*?\\].*")
+    public void captureLead(@FromParam final String from, @SubjectParam final String subject, @BodyParam final String message) {
         final String[] lines = message.split("\n");
         final Map<String, String> data = new HashMap<>();
 
@@ -43,7 +50,7 @@ public class InboxReader implements MailListener {
 
             final int pos = line.indexOf(":");
 
-            final String key = line.substring(0, pos).trim();
+            final String key = line.substring(0, pos).trim().toLowerCase().replaceAll("\\s+", "");
             final String value = line.substring(pos + 1).trim();
 
             data.put(key, value);
@@ -52,6 +59,23 @@ public class InboxReader implements MailListener {
         data.forEach((k,v) -> {
             System.out.println(String.format("%s: %s", k, v));
         });
+
+        final Lead lead = new Lead();
+
+        final SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d, yyyy 'at' hh:mm a");
+        try {
+            lead.setDate(sdf.parse(data.get("date")));
+        } catch (ParseException e) {
+            // ignore
+        }
+
+        lead.setCompany(data.get("company"));
+        lead.setEmail(data.get("email"));
+        lead.setFirstname(data.get("firstname"));
+        lead.setLastname(data.get("lastname"));
+        lead.setPhone(data.get("phone"));
+
+        storageService.persistLead(lead);
     }
 
 }

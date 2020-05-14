@@ -22,7 +22,7 @@
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
              http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
 
-    <persistence-unit name="lead-pu" transaction-type="RESOURCE_LOCAL">
+    <persistence-unit name="lead-pu" transaction-type="JTA">
         <jta-data-source>leadsDatabase</jta-data-source>
         <non-jta-data-source>leadsDatabaseUnmanaged</non-jta-data-source>
 

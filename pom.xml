@@ -91,6 +91,12 @@
       <type>zip</type>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.2.12</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -169,6 +175,7 @@
             <lib>remove:geronimo-javamail_1.4_mail</lib>
             <lib>org.apache.tomee.chatterbox:chatterbox-imap-api:${chatterbox.version}</lib>
             <lib>org.apache.geronimo.javamail:geronimo-javamail_1.4_mail:1.9.0-alpha-2</lib>
+            <lib>org.postgresql:postgresql:42.2.12</lib>
           </libs>
           <apps>
             <app>org.apache.tomee.chatterbox:chatterbox-imap-rar:${chatterbox.version}:rar</app>
